@@ -1,0 +1,1 @@
+{"to": "test@example.com", "subject": "Test Open Tracking", "body": "<h1>Test Email</h1><p>This is a test email to check open tracking.</p><a href='https://example.com'>Click here</a>", "campaignName": "test-tracking"}

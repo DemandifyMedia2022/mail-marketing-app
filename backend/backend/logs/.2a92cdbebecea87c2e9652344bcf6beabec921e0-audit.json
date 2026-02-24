@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\Users\\AnjaliGhumare\\Desktop\\self-mailMarketing\\mail-marketing-app\\backend\\backend\\logs\\.2a92cdbebecea87c2e9652344bcf6beabec921e0-audit.json",
+    "files": [
+        {
+            "date": 1768914902869,
+            "name": "C:\\Users\\AnjaliGhumare\\Desktop\\self-mailMarketing\\mail-marketing-app\\backend\\backend\\logs\\error-2026-01-20.log",
+            "hash": "938801494e960ced1b0a3fd65d4b4a096966e5160cd48abede8c2c033c2cc58f"
+        },
+        {
+            "date": 1768972014898,
+            "name": "C:\\Users\\AnjaliGhumare\\Desktop\\self-mailMarketing\\mail-marketing-app\\backend\\backend\\logs\\error-2026-01-21.log",
+            "hash": "20a5156f628c9cde09d90f430ff2637c41b141819d748a63bce9b03c3d9ffb7b"
+        }
+    ],
+    "hashType": "sha256"
+}

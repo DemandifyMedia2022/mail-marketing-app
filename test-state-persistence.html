@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test State Persistence</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>State Persistence Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Active View Persistence</h2>
+        <button class="button" onclick="testViewPersistence()">Test View Persistence</button>
+        <div id="view-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Test</h2>
+        <p>1. Open your mail app and navigate to any page (Templates, Campaigns, etc.)</p>
+        <p>2. Reload the browser (F5 or Ctrl+R)</p>
+        <p>3. Check if you're still on the same page after reload</p>
+        <button class="button" onclick="openApp()">Open Mail App</button>
+    </div>
+
+    <script>
+        function testViewPersistence() {
+            // Test localStorage functionality
+            const testViews = ['compose', 'templates', 'campaigns', 'surveyTemplates'];
+            let results = [];
+            
+            testViews.forEach(view => {
+                localStorage.setItem('activeView', view);
+                const retrieved = localStorage.getItem('activeView');
+                results.push({
+                    set: view,
+                    get: retrieved,
+                    success: retrieved === view
+                });
+            });
+            
+            document.getElementById('view-result').innerHTML = 
+                '<h3>Test Results:</h3>' +
+                results.map(r => 
+                    `<p>Set: <strong>${r.set}</strong> → Get: <strong>${r.get}</strong> → ${r.success ? '✅ Success' : '❌ Failed'}</p>`
+                ).join('');
+        }
+
+        function openApp() {
+            window.open('http://localhost:5173', '_blank');
+        }
+
+        // Run test on load
+        testViewPersistence();
+    </script>
+</body>
+</html>

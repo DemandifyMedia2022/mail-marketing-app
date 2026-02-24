@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Tracking Test</title>
+</head>
+<body>
+    <h1>Email Tracking Test Page</h1>
+    <p>This page simulates an email with tracking pixel.</p>
+    
+    <h2>Test Tracking Pixel</h2>
+    <p>The tracking pixel below will simulate an email open:</p>
+    
+    <!-- Test tracking pixel -->
+    <img src="http://localhost:5000/api/emails/track/open/test123" width="1" height="1" style="display:none;" alt="" />
+    
+    <h2>Instructions</h2>
+    <ol>
+        <li>Open this HTML file in a browser</li>
+        <li>Check the browser network tab - you should see a request to the tracking pixel</li>
+        <li>Check the backend console - you should see tracking logs</li>
+        <li>Open the frontend Campaign Analytics page to see real-time updates</li>
+    </ol>
+    
+    <h2>Expected Results</h2>
+    <ul>
+        <li>✅ Tracking pixel loads (1x1 transparent PNG)</li>
+        <li>✅ Backend logs the open event</li>
+        <li>✅ Real-time notification appears in frontend</li>
+        <li>✅ Database records the open with IP and user agent</li>
+    </ul>
+</body>
+</html>

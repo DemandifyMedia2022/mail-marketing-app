@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Test Surveys</title>
+</head>
+<body>
+    <h1>Add Test Surveys</h1>
+    <button onclick="addTestSurveys()">Add Test Surveys</button>
+    <button onclick="clearSurveys()">Clear All Surveys</button>
+    <button onclick="viewSurveys()">View Current Surveys</button>
+    <div id="output"></div>
+
+    <script>
+        function addTestSurveys() {
+            const testSurveys = [
+                {
+                    _id: 'test-survey-1',
+                    title: 'Customer Feedback Survey',
+                    description: 'Collect customer feedback about our products and services',
+                    category: 'Feedback',
+                    status: 'Draft',
+                    questions: [
+                        {
+                            _id: 'q1',
+                            type: 'text',
+                            label: 'What is your name?',
+                            required: true
+                        },
+                        {
+                            _id: 'q2',
+                            type: 'rating',
+                            label: 'How would you rate our service?',
+                            required: true
+                        }
+                    ],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                },
+                {
+                    _id: 'test-survey-2',
+                    title: 'Employee Satisfaction Survey',
+                    description: 'Measure employee satisfaction and engagement',
+                    category: 'HR',
+                    status: 'Active',
+                    questions: [
+                        {
+                            _id: 'q1',
+                            type: 'text',
+                            label: 'Department',
+                            required: true
+                        },
+                        {
+                            _id: 'q2',
+                            type: 'dropdown',
+                            label: 'Years with company',
+                            required: true,
+                            options: ['< 1 year', '1-3 years', '3-5 years', '5+ years']
+                        }
+                    ],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                }
+            ];
+
+            localStorage.setItem('surveys', JSON.stringify(testSurveys));
+            document.getElementById('output').innerHTML = 'Test surveys added successfully!';
+            console.log('Test surveys added:', testSurveys);
+        }
+
+        function clearSurveys() {
+            localStorage.removeItem('surveys');
+            document.getElementById('output').innerHTML = 'All surveys cleared!';
+            console.log('Surveys cleared');
+        }
+
+        function viewSurveys() {
+            const surveys = JSON.parse(localStorage.getItem('surveys') || '[]');
+            document.getElementById('output').innerHTML = `
+                <h3>Current Surveys (${surveys.length}):</h3>
+                <pre>${JSON.stringify(surveys, null, 2)}</pre>
+            `;
+            console.log('Current surveys:', surveys);
+        }
+    </script>
+</body>
+</html>

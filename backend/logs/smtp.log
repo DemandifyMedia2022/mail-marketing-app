@@ -1,0 +1,26 @@
+{"level":"error","message":{"error":"connect ETIMEDOUT 98.70.41.96:406","fatal":true},"timestamp":"2026-01-21T06:50:47.480Z"}
+{"level":"error","message":{"error":"connect ETIMEDOUT 98.70.41.96:406","fatal":true},"timestamp":"2026-01-21T06:57:47.114Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T06:58:59.730Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T07:07:36.774Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T07:08:23.016Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T08:23:37.065Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T08:24:00.303Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T09:45:48.302Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T10:26:38.723Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T10:30:37.525Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T10:44:21.241Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T10:46:07.062Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T10:51:43.657Z"}
+{"level":"error","message":{"error":"Connection timeout","fatal":true},"timestamp":"2026-01-21T10:52:56.430Z"}
+{"level":"info","message":{"email":"medharadavidraju@gmail.com","response":"250 2.0.0 Ok: queued as D342F10105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T10:56:27.951Z"}
+{"level":"info","message":{"email":"medharadavidraju@gmail.com","response":"250 2.0.0 Ok: queued as 9796510105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T10:59:59.679Z"}
+{"level":"info","message":{"email":"shraddha.adhav@demandifymedia.com","response":"250 2.0.0 Ok: queued as 8D7DE10105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:03:40.614Z"}
+{"level":"info","message":{"email":"anjali.ghumare@demandifymedia.com","response":"250 2.0.0 Ok: queued as 335B410105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:06:52.270Z"}
+{"level":"info","message":{"email":"anjali.ghumare@demandifymedia.com","response":"250 2.0.0 Ok: queued as 7260310105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:14:56.491Z"}
+{"level":"info","message":{"email":"shraddha.adhav@demandifymedia.com","response":"250 2.0.0 Ok: queued as B74CF10105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:15:07.101Z"}
+{"level":"info","message":{"email":"rutuja.pawar@demandifymedia.com","response":"250 2.0.0 Ok: queued as 58E9B10105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:15:17.912Z"}
+{"level":"info","message":{"email":"medhara.davidraju@demandifymedia.com","response":"250 2.0.0 Ok: queued as 2666C10105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:15:28.500Z"}
+{"level":"info","message":{"email":"it@demandifymedia.com","response":"250 2.0.0 Ok: queued as 13C9C10105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:15:39.090Z"}
+{"level":"info","message":{"email":"prajakta.saswade@demandifymedia.com","response":"250 2.0.0 Ok: queued as 559F410105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:15:49.369Z"}
+{"level":"info","message":{"email":"sanjog.adhav@demandifymedia.com","response":"250 2.0.0 Ok: queued as A972110105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:15:59.697Z"}
+{"level":"info","message":{"email":"sssss@gmail.com","response":"250 2.0.0 Ok: queued as 21DDB10105B","type":"SMTP_SENT"},"timestamp":"2026-01-21T11:16:10.131Z"}

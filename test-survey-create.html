@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Survey Create Fix</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Test Survey Create Fix</h1>
+    
+    <div class="test-section">
+        <h2>Step 1: Clear localStorage</h2>
+        <button class="button" onclick="clearLocalStorage()">Clear All Survey Data</button>
+        <div id="clear-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 2: Test Create New Survey</h2>
+        <button class="button" onclick="testCreateNewSurvey()">Simulate Create New Survey</button>
+        <div id="create-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 3: Test Edit Survey</h2>
+        <button class="button" onclick="testEditSurvey()">Simulate Edit Survey</button>
+        <div id="edit-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 4: Open Survey Form</h2>
+        <button class="button" onclick="openSurveyForm()">Open Survey Form Page</button>
+        <div id="open-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Current localStorage Status</h2>
+        <button class="button" onclick="showLocalStorageStatus()">Show Status</button>
+        <div id="status-result" class="result"></div>
+    </div>
+
+    <script>
+        function clearLocalStorage() {
+            localStorage.removeItem('editingSurveyData');
+            localStorage.removeItem('editingSurveyId');
+            localStorage.removeItem('viewingSurveyData');
+            localStorage.removeItem('viewingSurveyId');
+            
+            document.getElementById('clear-result').innerHTML = 
+                '<div class="success">✅ All survey data cleared from localStorage</div>';
+        }
+
+        function testCreateNewSurvey() {
+            // Clear existing data (like the fix does)
+            localStorage.removeItem('editingSurveyData');
+            localStorage.removeItem('editingSurveyId');
+            localStorage.removeItem('viewingSurveyData');
+            localStorage.removeItem('viewingSurveyId');
+            
+            // Check if data is cleared
+            const editingData = localStorage.getItem('editingSurveyData');
+            const viewingData = localStorage.getItem('viewingSurveyData');
+            
+            if (!editingData && !viewingData) {
+                document.getElementById('create-result').innerHTML = 
+                    '<div class="success">✅ Create New Survey simulation successful - localStorage cleared</div>';
+            } else {
+                document.getElementById('create-result').innerHTML = 
+                    '<div class="error">❌ Create New Survey simulation failed - data still exists</div>';
+            }
+        }
+
+        function testEditSurvey() {
+            // Simulate editing a survey
+            const mockSurvey = {
+                _id: 'test-survey-123',
+                title: 'Test Survey',
+                description: 'This is a test survey',
+                questions: [
+                    { id: 'q1', question: 'Test question 1', type: 'text' }
+                ]
+            };
+            
+            localStorage.setItem('editingSurveyData', JSON.stringify(mockSurvey));
+            localStorage.setItem('editingSurveyId', mockSurvey._id);
+            
+            document.getElementById('edit-result').innerHTML = 
+                '<div class="info">📝 Edit survey data stored in localStorage</div>';
+        }
+
+        function openSurveyForm() {
+            window.open('http://localhost:5173', '_blank');
+            document.getElementById('open-result').innerHTML = 
+                '<div class="info">🌐 Opening survey form page in new tab</div>';
+        }
+
+        function showLocalStorageStatus() {
+            const status = {
+                editingSurveyData: localStorage.getItem('editingSurveyData'),
+                editingSurveyId: localStorage.getItem('editingSurveyId'),
+                viewingSurveyData: localStorage.getItem('viewingSurveyData'),
+                viewingSurveyId: localStorage.getItem('viewingSurveyId')
+            };
+            
+            let html = '<h3>Current localStorage Contents:</h3>';
+            
+            for (const [key, value] of Object.entries(status)) {
+                const hasValue = value ? '✅ Has Data' : '❌ Empty';
+                const bgColor = value ? '#d4edda' : '#f8d7da';
+                html += `<p style="background: ${bgColor}; padding: 5px; margin: 2px 0;">
+                    <strong>${key}:</strong> ${hasValue}
+                </p>`;
+            }
+            
+            document.getElementById('status-result').innerHTML = html;
+        }
+
+        // Show status on load
+        showLocalStorageStatus();
+    </script>
+</body>
+</html>

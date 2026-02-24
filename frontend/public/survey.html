@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .survey-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+
+        .survey-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .survey-header h1 {
+            color: #1f2937;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .survey-header p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-checkbox {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            accent-color: #3b82f6;
+        }
+
+        .radio-group {
+            margin-top: 8px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-radio {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            accent-color: #3b82f6;
+        }
+
+        .radio-text {
+            margin-left: 4px;
+        }
+
+        .submit-button {
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        .submit-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+        }
+
+        .success-message {
+            background: #ecfdf5;
+            border: 1px solid #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .countdown-timer {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin-top: 8px;
+        }
+
+        #timer {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .survey-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .survey-footer p {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f3f4f6;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="loading">Loading survey...</div>
+    </div>
+
+    <script>
+        // Get backend URL dynamically
+        function getBackendUrl() {
+            // If running on localhost, use localhost
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:5000';
+            }
+            // If running on local network, try to detect the backend
+            if (window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) {
+                return 'http://localhost:5000';
+            }
+            // Default to localhost
+            return 'http://localhost:5000';
+        }
+
+        // Force cache refresh by adding timestamp
+        const cacheBuster = new Date().getTime();
+        console.log('🔄 Cache buster:', cacheBuster);
+
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const surveyId = urlParams.get('surveyId') || 'basic-survey';
+        const emailId = urlParams.get('emailId') || '';
+        const recipientEmail = urlParams.get('recipientEmail') || '';
+
+        // Debug logging
+        console.log('🔍 Survey.html Debug:');
+        console.log('  Survey ID from URL:', surveyId);
+        console.log('  Email ID:', emailId);
+        console.log('  Recipient Email:', recipientEmail);
+        console.log('  Full URL:', window.location.href);
+        console.log('  Backend URL:', getBackendUrl());
+
+        let submitted = false;
+        let countdownInterval;
+
+        function startCountdown() {
+            let timeLeft = 120; // 2 minutes in seconds
+            const timerElement = document.getElementById('timer');
+            
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (timerElement) {
+                    timerElement.textContent = timeLeft;
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    window.close();
+                }
+            }, 1000);
+        }
+
+        function renderSurveyForm() {
+            const container = document.getElementById('root');
+            
+            if (submitted) {
+                container.innerHTML = `
+                    <div class="survey-container">
+                        <div class="success-message">
+                            <h3>Thank you for your feedback!</h3>
+                            <p>Your response has been successfully submitted.</p>
+                            <div class="countdown-timer">
+                                <p id="countdown">This window will close in <span id="timer">120</span> seconds...</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                startCountdown();
+                return;
+            }
+
+            // If it's a custom survey, load and display it
+            if (surveyId !== 'basic-survey') {
+                loadCustomSurvey();
+                return;
+            }
+
+            // Otherwise, show basic survey form
+            container.innerHTML = `
+                <div class="survey-container">
+                    <div class="survey-header">
+                        <h1>We Value Your Feedback</h1>
+                        <p>Please take a moment to share your thoughts with us</p>
+                    </div>
+
+                    <div id="error-container"></div>
+
+                    <form id="survey-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Name *</label>
+                            <input type="text" id="name" name="name" class="form-input" placeholder="Enter your full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact" class="form-label">Contact Number *</label>
+                            <input type="tel" id="contact" name="contact" class="form-input" placeholder="Enter your phone number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Interested in our services?</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="interested" class="form-checkbox">
+                                    <span class="checkbox-text">Yes, I'm interested</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="feedback" class="form-label">Feedback *</label>
+                            <textarea id="feedback" name="feedback" class="form-textarea" placeholder="Share your thoughts and feedback..." rows="4" required></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-button" id="submit-btn">Submit Feedback</button>
+                    </form>
+
+                    <div class="survey-footer">
+                        <p>Thank you for your time and feedback. Your responses help us improve our services.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadCustomSurvey() {
+            const container = document.getElementById('root');
+            
+            try {
+                // Load custom survey form data from localStorage (same as SurveyTemplates page)
+                const savedSurveys = JSON.parse(localStorage.getItem('surveys') || '[]');
+                const survey = savedSurveys.find(s => s._id === surveyId);
+                
+                // Debug logging
+                console.log('🔍 loadCustomSurvey Debug:');
+                console.log('  Looking for survey ID:', surveyId);
+                console.log('  Total surveys in localStorage:', savedSurveys.length);
+                console.log('  Available survey IDs:', savedSurveys.map(s => s._id));
+                console.log('  Found survey:', survey);
+                
+                if (survey) {
+                    let formHtml = `
+                        <div class="survey-container">
+                            <div class="survey-header">
+                                <h1>${survey.title}</h1>
+                                <p>${survey.description}</p>
+                            </div>
+                            <div id="error-container"></div>
+                            <form id="survey-form">
+                    `;
+                    
+                    // Add survey questions
+                    if (survey.questions && survey.questions.length > 0) {
+                        survey.questions.forEach((question, index) => {
+                            formHtml += generateQuestionHtml(question, index);
+                        });
+                    } else {
+                        formHtml += '<p>No questions available for this survey.</p>';
+                    }
+                    
+                    formHtml += `
+                                <button type="submit" class="submit-button" id="submit-btn">Submit Survey</button>
+                            </form>
+                            <div class="survey-footer">
+                                <p>Thank you for your time and feedback.</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.innerHTML = formHtml;
+                    
+                    // Add form submit handler for custom survey
+                    document.getElementById('survey-form').addEventListener('submit', handleCustomSurveySubmit);
+                } else {
+                    container.innerHTML = `
+                        <div class="survey-container">
+                            <div class="error-message">
+                                <h3>Survey Not Found</h3>
+                                <p>The requested survey could not be loaded.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading custom survey:', error);
+                container.innerHTML = `
+                    <div class="survey-container">
+                        <div class="error-message">
+                            <h3>Loading Error</h3>
+                            <p>Failed to load the survey. Please try again.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function generateQuestionHtml(question, index) {
+            const questionId = question._id || `question_${index}`;
+            let html = `<div class="form-group">`;
+            
+            switch (question.type) {
+                case 'text':
+                    html += `
+                        <label for="${questionId}" class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <input type="text" id="${questionId}" name="${questionId}" class="form-input" placeholder="${question.placeholder || ''}" ${question.required ? 'required' : ''}>
+                    `;
+                    break;
+                    
+                case 'email':
+                    html += `
+                        <label for="${questionId}" class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <input type="email" id="${questionId}" name="${questionId}" class="form-input" placeholder="${question.placeholder || ''}" ${question.required ? 'required' : ''}>
+                    `;
+                    break;
+                    
+                case 'phone':
+                    html += `
+                        <label for="${questionId}" class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <input type="tel" id="${questionId}" name="${questionId}" class="form-input" placeholder="${question.placeholder || ''}" ${question.required ? 'required' : ''}>
+                    `;
+                    break;
+                    
+                case 'number':
+                    html += `
+                        <label for="${questionId}" class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <input type="number" id="${questionId}" name="${questionId}" class="form-input" placeholder="${question.placeholder || ''}" ${question.required ? 'required' : ''} min="${question.validation?.min || ''}" max="${question.validation?.max || ''}">
+                    `;
+                    break;
+                    
+                case 'textarea':
+                    html += `
+                        <label for="${questionId}" class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <textarea id="${questionId}" name="${questionId}" class="form-textarea" placeholder="${question.placeholder || ''}" rows="4" ${question.required ? 'required' : ''}></textarea>
+                    `;
+                    break;
+                    
+                case 'radio':
+                    html += `
+                        <label class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <div class="radio-group">
+                    `;
+                    if (question.options) {
+                        question.options.forEach((option, optIndex) => {
+                            html += `
+                                <label class="radio-label">
+                                    <input type="radio" name="${questionId}" value="${option}" ${optIndex === 0 && question.required ? 'required' : ''}>
+                                    <span class="radio-text">${option}</span>
+                                </label>
+                            `;
+                        });
+                    }
+                    html += `
+                        </div>
+                    `;
+                    break;
+                    
+                case 'checkbox':
+                    html += `
+                        <label class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <div class="checkbox-group">
+                    `;
+                    if (question.options) {
+                        question.options.forEach((option) => {
+                            html += `
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="${questionId}" value="${option}">
+                                    <span class="checkbox-text">${option}</span>
+                                </label>
+                            `;
+                        });
+                    }
+                    html += `
+                        </div>
+                    `;
+                    break;
+                    
+                case 'dropdown':
+                    html += `
+                        <label for="${questionId}" class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <select id="${questionId}" name="${questionId}" class="form-input" ${question.required ? 'required' : ''}>
+                            <option value="">Select an option</option>
+                    `;
+                    if (question.options) {
+                        question.options.forEach((option) => {
+                            html += `<option value="${option}">${option}</option>`;
+                        });
+                    }
+                    html += `
+                        </select>
+                    `;
+                    break;
+                    
+                case 'rating':
+                    html += `
+                        <label class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <div class="radio-group">
+                    `;
+                    for (let i = 1; i <= 5; i++) {
+                        html += `
+                            <label class="radio-label">
+                                <input type="radio" name="${questionId}" value="${i}" ${question.required ? 'required' : ''}>
+                                <span class="radio-text">${i} ${i === 1 ? 'star' : 'stars'}</span>
+                            </label>
+                        `;
+                    }
+                    html += `
+                        </div>
+                    `;
+                    break;
+                    
+                case 'yesno':
+                    html += `
+                        <label class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="${questionId}" value="yes" ${question.required ? 'required' : ''}>
+                                <span class="radio-text">Yes</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="${questionId}" value="no">
+                                <span class="radio-text">No</span>
+                            </label>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'emoji':
+                    html += `
+                        <label class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="${questionId}" value="😀" ${question.required ? 'required' : ''}>
+                                <span class="radio-text">😀 Happy</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="${questionId}" value="😐">
+                                <span class="radio-text">😐 Neutral</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="${questionId}" value="😢">
+                                <span class="radio-text">😢 Sad</span>
+                            </label>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    html += `
+                        <label for="${questionId}" class="form-label">${question.question} ${question.required ? '*' : ''}</label>
+                        <input type="text" id="${questionId}" name="${questionId}" class="form-input" placeholder="${question.placeholder || ''}" ${question.required ? 'required' : ''}>
+                    `;
+                    break;
+            }
+            
+            html += `</div>`;
+            return html;
+        }
+
+        async function handleCustomSurveySubmit(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const errorContainer = document.getElementById('error-container');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            errorContainer.innerHTML = '';
+
+            // Collect form data for custom survey
+            const formData = new FormData(e.target);
+            const answers = [];
+            
+            // Get all form inputs and convert to answers format
+            const inputs = e.target.querySelectorAll('input, textarea, select');
+            inputs.forEach((input, index) => {
+                if (input.type === 'checkbox') {
+                    if (input.checked) {
+                        answers.push({
+                            questionId: input.name,
+                            question: input.labels[0]?.textContent || `Question ${index + 1}`,
+                            answer: input.value,
+                            answerText: input.value
+                        });
+                    }
+                } else if (input.type === 'radio') {
+                    if (input.checked) {
+                        answers.push({
+                            questionId: input.name,
+                            question: input.labels[0]?.textContent || `Question ${index + 1}`,
+                            answer: input.value,
+                            answerText: input.value
+                        });
+                    }
+                } else if (input.value.trim()) {
+                    answers.push({
+                        questionId: input.name,
+                        question: input.labels[0]?.textContent || `Question ${index + 1}`,
+                        answer: input.value,
+                        answerText: input.value
+                    });
+                }
+            });
+
+            // Get survey data for title and description
+            const savedSurveys = JSON.parse(localStorage.getItem('surveys') || '[]');
+            const survey = savedSurveys.find(s => s._id === surveyId);
+
+            const data = {
+                surveyId: surveyId,
+                recipientEmail: recipientEmail,
+                answers: answers,
+                title: survey?.title || 'Custom Survey',
+                description: survey?.description || 'Custom survey description',
+                questions: survey?.questions || []
+            };
+
+            console.log('🚀 Submitting custom survey to:', getBackendUrl());
+            console.log('📊 Survey data:', data);
+
+            try {
+                const response = await fetch(`${getBackendUrl()}/api/surveys/responses/preview?t=${cacheBuster}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ Custom survey submitted successfully:', result);
+                    submitted = true;
+                    renderSurveyForm();
+                    // Countdown will handle window closing after 2 minutes
+                } else {
+                    throw new Error(result.message || 'Failed to submit survey');
+                }
+            } catch (error) {
+                console.error('❌ Custom survey submission error:', error);
+                errorContainer.innerHTML = `
+                    <div class="error-message">
+                        ${error.message || 'Failed to submit survey. Please try again.'}
+                    </div>
+                `;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Survey';
+            }
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const errorContainer = document.getElementById('error-container');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            errorContainer.innerHTML = '';
+
+            const formData = new FormData(e.target);
+            const data = {
+                name: formData.get('name'),
+                contact: formData.get('contact'),
+                interested: formData.get('interested') === 'on',
+                feedback: formData.get('feedback'),
+                surveyId: surveyId,
+                emailId: emailId,
+                recipientEmail: recipientEmail,
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('🚀 Submitting basic survey to:', getBackendUrl());
+            console.log('📊 Basic survey data:', data);
+
+                    try {
+                // Use dynamic backend URL with cache buster
+                const response = await fetch(`${getBackendUrl()}/api/surveys/responses/basic?t=${cacheBuster}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ Survey submitted successfully:', result);
+                    submitted = true;
+                    renderSurveyForm();
+                    // Countdown will handle window closing after 2 minutes
+                } else {
+                    throw new Error(result.message || 'Failed to submit survey');
+                }
+            } catch (error) {
+                console.error('❌ Survey submission error:', error);
+                errorContainer.innerHTML = `
+                    <div class="error-message">
+                        ${error.message || 'Failed to submit survey. Please try again.'}
+                    </div>
+                `;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Feedback';
+            }
+        }
+
+        // Initialize the form
+        renderSurveyForm();
+    </script>
+</body>
+</html>

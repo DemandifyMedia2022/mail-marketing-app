@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Survey Fix</title>
+</head>
+<body>
+    <h1>Survey Connection Test</h1>
+    <button onclick="testSurveyUrl()">Test Survey URL</button>
+    <button onclick="testBackendConnection()">Test Backend Connection</button>
+    <div id="results"></div>
+
+    <script>
+        // Test the survey URL generation
+        function testSurveyUrl() {
+            const surveyUrl = `${window.location.origin}/survey.html?surveyId=test123&emailId=test@example.com&recipientEmail=test@example.com`;
+            console.log('🔗 Testing survey URL:', surveyUrl);
+            
+            // Open in new window
+            window.open(surveyUrl, '_blank');
+        }
+
+        // Test backend connection
+        async function testBackendConnection() {
+            try {
+                const response = await fetch('http://localhost:5000/api/health', {
+                    method: 'GET'
+                });
+                
+                if (response.ok) {
+                    document.getElementById('results').innerHTML = '✅ Backend is running on localhost:5000';
+                } else {
+                    document.getElementById('results').innerHTML = '❌ Backend responded with error: ' + response.status;
+                }
+            } catch (error) {
+                document.getElementById('results').innerHTML = '❌ Backend connection failed: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

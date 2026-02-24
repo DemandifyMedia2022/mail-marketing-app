@@ -1,0 +1,18 @@
+export type ViewKey =
+  | "compose"
+  | "inbox"
+  | "sent"
+  | "draft"
+  | "spam"
+  | "trash"
+  | "templates"
+  | "campaigns"
+  | "campaignCreate"
+  | "campaignDetail"
+  | "campaignAnalyticsReport"
+  | "surveyForm"
+  | "surveyTemplates"
+  | "surveyView"
+  | "landingPages"
+  | "profile"
+  | "tailwind-test";

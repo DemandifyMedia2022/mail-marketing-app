@@ -180,7 +180,10 @@ export default function Campaigns({ onStartCreate, onOpenDetail }: CampaignsProp
             className="campaign-row"
             onClick={() => onOpenDetail?.(c)}
           >
-            <span className="campaign-name">{c.name || "(No name)"}</span>
+            <div className="campaign-info">
+              <div className="campaign-name">{c.name || "(No name)"}</div>
+              <div className="campaign-subject">{c.subject || "(No subject)"}</div>
+            </div>
 
             <span
               className={`badge ${

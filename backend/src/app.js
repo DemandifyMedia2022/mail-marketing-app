@@ -273,11 +273,22 @@ app.get('/landing-page/:id', (req, res) => {
                             ...element.styles,
                             // Override problematic styles for proper display
                             width: '100%',
+                            maxWidth: 'none',
+                            minWidth: 'auto',
                             margin: '0',
-                            padding: '0',
+                            padding: '12px', // Add proper padding for form fields
                             overflow: 'visible',
                             boxSizing: 'border-box',
-                            minHeight: 'auto'
+                            minHeight: 'auto',
+                            height: 'auto',
+                            maxHeight: 'none',
+                            // Ensure form can grow to fit content
+                            flex: '1 1 auto',
+                            flexGrow: 1,
+                            flexShrink: 0,
+                            // Remove any user constraints that might cause cropping
+                            fontSize: '14px',
+                            lineHeight: '1.4'
                         });
                         
                         element.content.fields.forEach((field, index) => {
@@ -311,13 +322,13 @@ app.get('/landing-page/:id', (req, res) => {
                             
                             Object.assign(input.style, {
                                 width: '100%',
-                                padding: '0px', // No padding
+                                padding: '8px', // Proper padding
                                 border: '1px solid #d1d5db',
-                                borderRadius: '0px',
-                                fontSize: '5px', // Ultra-small font
+                                borderRadius: '4px',
+                                fontSize: '12px', // Readable font size
                                 boxSizing: 'border-box',
-                                minHeight: '12px', // Ultra-compact height
-                                lineHeight: '1.0' // Ultra-tight line height
+                                minHeight: '32px', // Proper height
+                                lineHeight: '1.4' // Proper line height
                             });
                             
                             fieldWrapper.appendChild(input);
@@ -352,21 +363,7 @@ app.get('/landing-page/:id', (req, res) => {
                         const submitBtn = document.createElement('button');
                         submitBtn.type = 'submit';
                         submitBtn.textContent = element.content.submitText;
-                        submitBtn.style.cssText = \`
-                            background-color: #3b82f6;
-                            color: white;
-                            padding: 0px; // No padding
-                            border: none;
-                            border-radius: 0px;
-                            font-size: '5px'; // Ultra-small font
-                            font-weight: 600;
-                            cursor: pointer;
-                            width: 100%;
-                            box-sizing: border-box;
-                            min-height: 14px; // Ultra-compact height
-                            margin-top: 0px; // No spacing from fields
-                            line-height: 1.0; // Ultra-tight line height
-                        \`;
+                        submitBtn.style.cssText = 'background-color: #3b82f6; color: white; padding: 8px 16px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; width: 100%; box-sizing: border-box; min-height: 36px; margin-top: 8px; line-height: 1.4;';
                         form.appendChild(submitBtn);
                         
                         // Add form submission handler
@@ -426,11 +423,8 @@ app.get('/landing-page/:id', (req, res) => {
                         );
                         
                         if (isInsideContainer) {
-                            // Most aggressive size constraints for forms inside containers
-                            const userMaxWidth = parseInt(element.styles.maxWidth) || 200;
-                            const userPadding = parseInt(element.styles.padding) || 4;
-                            const userFontSize = parseInt(element.styles.fontSize) || 9;
-                            formWrapper.style.cssText = 'max-width: ' + Math.min(userMaxWidth, 200) + 'px; margin: ' + (element.styles.margin || '0') + '; padding: ' + Math.min(userPadding, 4) + 'px; box-sizing: border-box; overflow: visible; font-size: ' + Math.min(userFontSize, 9) + 'px; width: ' + (element.styles.width || '180px') + '; min-width: ' + Math.max(parseInt(element.styles.minWidth) || 120, 120) + 'px; flex: 0 0 auto; line-height: 1.2;';
+                            // Remove all constraints for forms inside containers
+                            formWrapper.style.cssText = 'margin: 0px; padding: 0px; box-sizing: border-box; overflow: visible; width: 100%; max-width: none; min-width: auto; flex: 1 1 auto; line-height: 1.4; display: block; position: relative; z-index: 1;';
                         } else {
                             // More aggressive size constraints for standalone forms
                             const userMaxWidth = parseInt(element.styles.maxWidth) || 300;
@@ -457,16 +451,25 @@ app.get('/landing-page/:id', (req, res) => {
                             ...element.styles,
                             border: element.styles.border || 'none',
                             backgroundColor: element.styles.backgroundColor || '#f9fafb',
-                            minHeight: Math.min(parseInt(element.styles.minHeight) || 60, 60) + 'px', // Much smaller default
-                            padding: Math.min(parseInt(element.styles.padding) || 8, 8) + 'px', // Much smaller padding
+                            minHeight: element.styles.minHeight || '200px', // Allow proper height for forms
+                            padding: element.styles.padding || '20px', // Allow proper padding
                             margin: element.styles.margin || '0px',
                             borderRadius: element.styles.borderRadius || '8px',
                             width: element.styles.width || '100%',
                             height: element.styles.height || 'auto',
                             maxWidth: element.styles.maxWidth || 'none',
-                            overflow: 'visible', // Changed from 'hidden' to 'visible'
+                            overflow: 'visible', // Ensure content is not cropped
                             boxSizing: 'border-box',
-                            minWidth: Math.min(parseInt(element.styles.minWidth) || 150, 150) + 'px' // Much smaller min width
+                            minWidth: element.styles.minWidth || '400px', // Allow proper minimum width for forms
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'stretch',
+                            // Remove any height constraints
+                            maxHeight: 'none',
+                            // Ensure container can grow to fit content
+                            flex: '1 1 auto',
+                            flexGrow: 1,
+                            flexShrink: 0
                         });
                         
                         if (element.content.children && element.content.children.length > 0) {
@@ -474,21 +477,29 @@ app.get('/landing-page/:id', (req, res) => {
                             Object.assign(flexContainer.style, {
                                 display: element.containerStyles?.display || 'flex',
                                 flexDirection: element.containerStyles?.flexDirection || 'row',
-                                alignItems: element.containerStyles?.alignItems || 'center',
+                                alignItems: element.containerStyles?.alignItems || 'stretch',
                                 justifyContent: element.containerStyles?.justifyContent || 'flex-start',
-                                gap: Math.min(parseInt(element.containerStyles?.gap) || 8, 8) + 'px', // Much smaller gap
+                                gap: element.containerStyles?.gap || '20px', // Allow proper spacing
                                 width: '100%',
                                 height: '100%',
-                                flexWrap: element.containerStyles?.flexWrap || 'wrap', // Changed to wrap
+                                flexWrap: element.containerStyles?.flexWrap || 'wrap',
                                 position: 'relative',
-                                overflow: 'visible', // Changed from 'hidden' to 'visible'
+                                overflow: 'visible', // Ensure content is not cropped
                                 boxSizing: 'border-box',
-                                // Add padding to prevent edge clipping
-                                padding: Math.min(parseInt(element.containerStyles?.padding) || 4, 4) + 'px', // Much smaller padding
-                                // Ensure container can grow to fit content
+                                // Allow proper padding for container
+                                padding: element.containerStyles?.padding || '0px',
+                                // Allow container to grow to fit content
                                 minHeight: 'auto',
-                                // Add minimum width for container
-                                minWidth: '120px' // Much smaller min width
+                                // Allow proper minimum width for container
+                                minWidth: 'auto',
+                                // Ensure flex items can grow to fit content
+                                flexGrow: 1,
+                                flexShrink: 0,
+                                flexBasis: 'auto',
+                                // Remove any height constraints
+                                maxHeight: 'none',
+                                // Ensure full width usage
+                                maxWidth: 'none'
                             });
                             
                             element.content.children.forEach(childId => {
@@ -504,20 +515,20 @@ app.get('/landing-page/:id', (req, res) => {
                                         cursor: 'default',
                                         minHeight: childElement.styles.minHeight || 'auto',
                                         minWidth: childElement.styles.minWidth || 'auto',
-                                        width: childElement.type === 'image' ? (childElement.styles.width || '100%') : (childElement.styles.width || 'auto'),
+                                        width: childElement.type === 'image' ? (childElement.styles.width || '100%') : (childElement.styles.width || '100%'),
                                         height: childElement.styles.height || 'auto',
-                                        padding: Math.min(parseInt(childElement.styles.padding) || 2, 2) + 'px', // Ultra-minimal padding
-                                        margin: Math.min(parseInt(childElement.styles.margin) || 2, 2) + 'px', // Ultra-minimal margin
+                                        padding: childElement.styles.padding || '0px',
+                                        margin: childElement.styles.margin || '0px',
                                         backgroundColor: childElement.styles.backgroundColor || 'transparent',
-                                        borderRadius: childElement.styles.borderRadius || '0px',
+                                        borderRadius: childElement.styles.borderRadius || '4px',
                                         display: childElement.styles.display || 'block',
                                         // Enhanced flex properties for better container behavior
-                                        flex: childElement.styles.flex || '0 1 auto',
-                                        flexGrow: childElement.styles.flexGrow !== undefined ? childElement.styles.flexGrow : 0,
-                                        flexShrink: childElement.styles.flexShrink !== undefined ? childElement.styles.flexShrink : 1,
+                                        flex: childElement.styles.flex || '1 1 auto',
+                                        flexGrow: childElement.styles.flexGrow !== undefined ? childElement.styles.flexGrow : 1,
+                                        flexShrink: childElement.styles.flexShrink !== undefined ? childElement.styles.flexShrink : 0,
                                         flexBasis: childElement.styles.flexBasis || 'auto',
                                         // Ensure proper flex alignment
-                                        alignSelf: childElement.styles.alignSelf || 'auto',
+                                        alignSelf: childElement.styles.alignSelf || 'stretch',
                                         // Remove conflicting margin-based alignment for flex items
                                         marginLeft: '0',
                                         marginRight: '0',
@@ -527,32 +538,39 @@ app.get('/landing-page/:id', (req, res) => {
                                         overflow: 'visible',
                                         // Ensure proper box sizing
                                         boxSizing: 'border-box',
-                                        // Remove maxWidth constraint to allow full element display
+                                        // Allow maxWidth to be user-defined
                                         maxWidth: childElement.styles.maxWidth || 'none',
                                         // Ensure text doesn't overflow
                                         wordWrap: 'break-word',
                                         overflowWrap: 'break-word',
                                         // Special handling for forms to prevent cropping
                                         ...(childElement.type === 'form' ? {
-                                            // Ultra-extreme size constraints
-                                            width: '120px', // Ultra-small fixed width
-                                            maxWidth: '120px', // Ultra-small fixed max width
-                                            minWidth: '120px', // Ultra-small fixed min width
-                                            flex: '0 0 auto', // Don't grow or shrink
-                                            flexGrow: 0, // Never grow
-                                            flexShrink: 0, // Never shrink
+                                            // Remove all constraints for forms in containers
+                                            width: '100%',
+                                            maxWidth: 'none',
+                                            minWidth: '300px',
+                                            flex: '1 1 auto', // Allow form to grow and shrink
+                                            flexGrow: 1,
+                                            flexShrink: 0, // Don't shrink below content size
                                             overflow: 'visible',
-                                            margin: '0',
-                                            padding: '1px', // Ultra-minimal padding
-                                            fontSize: '6px', // Ultra-small font
+                                            margin: '0px',
+                                            padding: '0px',
+                                            fontSize: '14px',
                                             minHeight: 'auto',
                                             maxHeight: 'none',
                                             boxSizing: 'border-box',
-                                            lineHeight: '1.0',
-                                            // Override all user styles to prevent conflicts
-                                            border: 'none',
-                                            backgroundColor: 'transparent',
-                                            borderRadius: '0px'
+                                            lineHeight: '1.4',
+                                            // Preserve user styling for forms
+                                            border: childElement.styles.border || '1px solid #d1d5db',
+                                            backgroundColor: childElement.styles.backgroundColor || '#ffffff',
+                                            borderRadius: childElement.styles.borderRadius || '4px',
+                                            // Ensure form doesn't get constrained
+                                            position: 'relative',
+                                            zIndex: 1,
+                                            // Remove any size constraints
+                                            height: 'auto',
+                                            flexBasis: 'auto',
+                                            alignSelf: 'stretch'
                                         } : {}),
                                         // Special handling for images to prevent cropping
                                         ...(childElement.type === 'image' ? {
@@ -561,8 +579,8 @@ app.get('/landing-page/:id', (req, res) => {
                                             minWidth: childElement.styles.minWidth || 'auto',
                                             flex: '0 1 auto',
                                             overflow: 'visible',
-                                            margin: '0',
-                                            padding: Math.min(parseInt(childElement.styles.padding) || 2, 2) + 'px', // Ultra-minimal padding
+                                            margin: '0px',
+                                            padding: childElement.styles.padding || '4px',
                                             objectFit: 'contain'
                                         } : {})
                                     });
